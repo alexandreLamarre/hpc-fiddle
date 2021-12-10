@@ -27,6 +27,7 @@ RUN which sha1sum
 # ======= Build Stage ========
 FROM gcc:10.3.0 as build
 WORKDIR /usr/src/app
+COPY --from=setup-test-tools /usr/src/app /test
 COPY . /usr/src/app/
 # Copy parallelism tools
 RUN make clean

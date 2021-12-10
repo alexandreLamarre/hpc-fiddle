@@ -1,7 +1,7 @@
 #!/bin/bash
 
 version="3.18.1"
-verified_checksum="de56a5532b0c81781db677ca712c585a"
+verified_checksum="0a694a8d0c2152978bf64b67ad0b3dd972bbeb54"
 
 # 1) Change into tmp
 cwd=`pwd`
@@ -10,16 +10,16 @@ cd /tmp
 # 2) Download it to
 curl -0 "https://sourceware.org/pub/valgrind/valgrind-$version.tar.bz2" -o "valgrind-$version.tar.bz2"
 
-# file_checksum=`md5 "./valgrind-$version.tar.bz2" | awk '{ print $4 }'`
+file_checksum=`sha1sum "./valgrind-$version.tar.bz2" | awk '{ print $4 }'`
 
-# if [ $verified_checksum != $file_checksum ]; then
-# 	echo "md5 checksum mismatch, aborting"
-# 	exit 1
-# fi
+if [ $verified_checksum != $file_checksum ]; then
+	echo "sha1 checksum mismatch, aborting"
+	exit 1
+fi
 ls
 # 2) Unpack
 
-tar -xjvf "./valgrind-$version.tar.bz2"
+tar -xjf "./valgrind-$version.tar.bz2"
 
 # cd into newly created directory
 cd "./valgrind-$version"
