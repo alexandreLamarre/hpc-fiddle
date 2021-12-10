@@ -1,0 +1,40 @@
+#!/bin/bash
+
+version="3.18.1"
+verified_checksum="de56a5532b0c81781db677ca712c585a"
+
+# 1) Change into tmp
+cwd=`pwd`
+cd /tmp
+
+# 2) Download it to
+curl -0 "https://sourceware.org/pub/valgrind/valgrind-$version.tar.bz2" -o "valgrind-$version.tar.bz2"
+
+# file_checksum=`md5 "./valgrind-$version.tar.bz2" | awk '{ print $4 }'`
+
+# if [ $verified_checksum != $file_checksum ]; then
+# 	echo "md5 checksum mismatch, aborting"
+# 	exit 1
+# fi
+ls
+# 2) Unpack
+
+tar -xjvf "./valgrind-$version.tar.bz2"
+
+# cd into newly created directory
+cd "./valgrind-$version"
+
+# 3) Configure
+./configure
+
+# 4) make
+make 
+
+# 5) install it
+make install
+
+# 6) Clean up
+cd ../
+rm -fr "./valgrind-$version"
+unlink "./valgrind-$version.tar.bz2"
+cd $cwd
