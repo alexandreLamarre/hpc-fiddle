@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# IDE configurations
+.vscode
+.idea
+
+# Ignore Debug output from HPC tooling
+debug/
