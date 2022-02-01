@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# # Download HPC monitoring tool likwid
+git clone https://github.com/RRZE-HPC/likwid.git ../likwid
+
+cd ../likwid
+
+# echo "Check configuraiton..."
+cat config.mk > res.out
+
+# # build from source and install
+make
+ls -a
+

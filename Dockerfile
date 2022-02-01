@@ -1,38 +1,40 @@
-ARG TEST_ENV
-ARG GPU
-ARG METRICS
+# ARG TEST_ENV
+# ARG GPU
+# ARG METRICS
 
-# ====== Test Tools Setup Stage =======
-FROM gcc:10.3.0 as setup-test-tools
-WORKDIR /usr/src/app
-COPY . /usr/src/app/
-# external tools install here
-RUN  /usr/src/app/install/install_valgrind
-RUN which valgrind
-RUN which sha1sum
-
-# TODO install other debug tools:
-#  - QCacheGrind
-#  - likwid 
-
-
-# ====== Parallelism Tools Setup Stage ====
-# FROM gcc:10.3.0 as parallelism-tools
+# # ====== Test Tools Setup Stage =======
+# FROM gcc:10.3.0 as setup-test-tools
 # WORKDIR /usr/src/app
 # COPY . /usr/src/app/
-# TODO : install tools like open MP
-# TODO : check for GPU tools like CUDA
+# # external tools install here
+# # RUN  /usr/src/app/install/install_valgrind
+# # RUN which valgrind
+# # RUN /usr/src/app/install/install_likwid
+# RUN which modprobe
+# RUN which likwid-perfctr
+
+# # TODO install other debug tools:
+# #  - QCacheGrind
+# #  - likwid 
 
 
-# ======= Build Stage ========
-FROM gcc:10.3.0 as build
-WORKDIR /usr/src/app
-COPY --from=setup-test-tools /usr/src/app /test
-COPY . /usr/src/app/
-# Copy parallelism tools
-RUN make clean
-RUN make
-CMD ["/usr/src/app/main"]
+# # ====== Parallelism Tools Setup Stage ====
+# # FROM gcc:10.3.0 as parallelism-tools
+# # WORKDIR /usr/src/app
+# # COPY . /usr/src/app/
+# # TODO : install tools like open MP
+# # TODO : check for GPU tools like CUDA
+
+
+# # ======= Build Stage ========
+# FROM gcc:10.3.0 as build
+# WORKDIR /usr/src/app
+# COPY --from=setup-test-tools /usr/src/app /test
+# COPY . /usr/src/app/
+# # Copy parallelism tools
+# RUN make clean
+# RUN make
+# CMD ["/usr/src/app/main"]
 
 
 # ======== Test Stage ========
@@ -47,3 +49,15 @@ CMD ["/usr/src/app/main"]
 # COPY --from=build /usr/src/app /
 
 # CMD ["echo", "something"]
+
+FROM alpine
+
+COPY . /usr/src/app
+RUN apk update
+RUN apk add git
+RUN apk add make
+RUN which make
+RUN /usr/src/app/install/install_likwid
+RUN which perl
+
+CMD ["cat", "likwid/res.out"]
